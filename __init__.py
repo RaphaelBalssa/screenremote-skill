@@ -38,26 +38,28 @@ class Screenremote(MycroftSkill):
     def handle_TV_menu(self, message):
         try:
             data = { "key_entry": message.data['']}
-
+            self.speak_dialog('Confirm')
 
     @intent_handler(IntentBuilder("").require("MenuQuery").optionally("RadioButton"
         ).build())
     def handle_radio_menu(self, message):
         try:
             data = {key_entry: message.data['MenuQuery']}
-
+            
             self.speak_dialog('Confirm')
 
     @intent_handler(IntentBuilder("").require("MenuQuery").optionally("GameButton"
         ).build())
     def handle_game_menu(self, message):
         try:
-
+            
+            self.speak_dialog('Confirm')
 
     @intent_handler(IntentBuilder("").require("MenuQuery").optionally("Button"
         ).build())
     def handle_main_menu(self, message):
         try:
+            self.speak_dialog('Confirm')
 
     @intent_handler(IntentBuilder("").require("Press").optionally("Query"
         ).build())
@@ -65,7 +67,9 @@ class Screenremote(MycroftSkill):
         try:
             data = {"data": message.data['Press']}
             requests.post(domainServer, data = data)
+            self.speak_dialog('Confirm')
 
+            
 def create_skill():
     return Screenremote()
 
