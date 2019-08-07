@@ -29,9 +29,9 @@ class Screenremote(MycroftSkill):
 
     # Définition de l'intent directionnel, concrètement
     # permettre au curseur de monter quand on dit "monte"
-    @intent_handler(IntentBuilder("").require("Direction").optionally("Query"
+    @intent_handler(IntentBuilder("DirectionRemoteIntent").require("Direction").optionally("Query"
         ).build())
-    def handle_direction_remote(self, message):
+    def handle_direction_remote_intent(self, message):
         try:
             #key_input = message.data['Direction']
             #r = requests.post(domainServer, data = key_input)
@@ -43,9 +43,9 @@ class Screenremote(MycroftSkill):
     # Définition de l'intent des boutons, concrètement
     # appuie sur le bouton vert ou encore le bouton 1 
     # si on lui dit de le faire
-    @intent_handler(IntentBuilder("").require('Press').require("Key"
+    @intent_handler(IntentBuilder("KeyRemoteIntent").require('Press').require("Key"
         ).optionally("Query").build())
-    def handle_key_remote(self, message):
+    def handle_key_remote_intent(self, message):
         try:
             #data = {"user": user, "key_input": message.data['Key']}
             #r = requests.post(domainServer, data = key_input)
@@ -93,8 +93,8 @@ class Screenremote(MycroftSkill):
             requests.post(domainServer, data = data)
 
 
-    def sendRequest(url):
-        return False
+   # def sendRequest(url):
+   #    return False
 
 def create_skill():
     return Screenremote()
