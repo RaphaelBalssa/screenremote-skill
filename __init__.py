@@ -7,7 +7,7 @@ from mycroft.util.log import LOG
 from mycroft.util.parse import extract_datetime
 from mycroft.util.format import nice_number
 from adapt.intent import IntentBuilder
-from mycroft.util.log import LOG
+from mycroft.util.log import getLogger
 import mycroft.audio
 
 import requests
@@ -29,30 +29,57 @@ class Screenremote(MycroftSkill):
 
     # Définition de l'intent directionnel, concrètement
     # permettre au curseur de monter quand on dit "monte"
-    @intent_handler(IntentBuilder("DirectionRemoteIntent").require('Go').require("Direction").optionally("Query"
-        ).build())
-    def handle_direction_remote_intent(self, message):
-        try:
+    #@intent_handler(IntentBuilder("").require('Go').require("Direction").optionally("Query"
+    #    ).build())
+    #def handle_direction_remote_intent(self, message):
+    #    try:
             #key_input = message.data['Direction']
             #r = requests.post(domainServer, data = key_input)
+    #        self.speak_dialog('Confirm')
+
+    #    except Exception as e:
+    #        self.speak_dialog('connection.error')
+            
+    @intent_file_handler('direction.press.intent')
+    def handle_direction_press_f(self, message):
+        self.handle_direction_press(message)   
+
+    # Handle: direction pressed
+    def handle_direction_press(self, message):
+
+        try:
             self.speak_dialog('Confirm')
 
         except Exception as e:
-            self.speak_dialog('connection.error')
-            
+            self.speak_dialog('connection.error')    
+
+
     # Définition de l'intent des boutons, concrètement
     # appuie sur le bouton vert ou encore le bouton 1 
     # si on lui dit de le faire
-    @intent_handler(IntentBuilder("KeyRemoteIntent").require('Press').require("Key"
-        ).optionally("Query").build())
-    def handle_key_remote_intent(self, message):
-        try:
+    #@intent_handler(IntentBuilder("").require('Press').require("Key"
+    #    ).optionally("Query").build())
+    #def handle_key_remote_intent(self, message):
+    #    try:
             #data = {"user": user, "key_input": message.data['Key']}
             #r = requests.post(domainServer, data = key_input)
-            self.speak_dialog('Confirm')
+    #        self.speak_dialog('Confirm')
         
+    #    except Exception as e:
+    #        self.speak_dialog('connection.error')
+
+    @intent_file_handler('button.press.intent')
+    def handle_button_press_f(self, message):
+        self.handle_button_press(message)   
+
+    # Handle: button pressed
+    def handle_button_press(self, message):
+
+        try:
+            self.speak_dialog('Confirm')
+
         except Exception as e:
-            self.speak_dialog('connection.error')
+            self.speak_dialog('connection.error') 
 
     # @intent_handler(IntentBuilder("").require("MenuQuery").require("TVButton"
     #     ).build())
