@@ -33,8 +33,8 @@ class Screenremote(MycroftSkill):
         ).build())
     def handle_direction_remote(self, message):
         try:
-            key_input = message.data['Direction']
-            r = requests.post(domainServer, data = key_input)
+            #key_input = message.data['Direction']
+            #r = requests.post(domainServer, data = key_input)
             self.speak_dialog('Confirm')
 
         except Exception as e:
@@ -47,8 +47,8 @@ class Screenremote(MycroftSkill):
         ).optionally("Query").build())
     def handle_key_remote(self, message):
         try:
-            data = {"user": user, "key_input": message.data['Key']}
-            r = requests.post(domainServer, data = key_input)
+            #data = {"user": user, "key_input": message.data['Key']}
+            #r = requests.post(domainServer, data = key_input)
             self.speak_dialog('Confirm')
         
         except Exception as e:
