@@ -18,7 +18,7 @@ LOGGER = getLogger(__name__)
 # j'ai noté ici l'adresse à laquelle on fait la requête
 # mais c'était seulement pour le phase de test, le nom de domaine doit 
 # être paramétré dans un fichier JSON
-domainServer = "http://www.mytestskill.com"
+# domainServer = "http://www.mytestskill.com"
 
 class Screenremote(MycroftSkill):
 
@@ -29,7 +29,7 @@ class Screenremote(MycroftSkill):
 
     # Définition de l'intent directionnel, concrètement
     # permettre au curseur de monter quand on dit "monte"
-    @intent_handler(IntentBuilder("DirectionRemoteIntent").require("Direction").optionally("Query"
+    @intent_handler(IntentBuilder("DirectionRemoteIntent").require('Go').require("Direction").optionally("Query"
         ).build())
     def handle_direction_remote_intent(self, message):
         try:
@@ -87,10 +87,10 @@ class Screenremote(MycroftSkill):
     #         self.speak_dialog('Confirm')
 
     # méthode permettant d'appuyer sur le bouton OK
-    def handle_press_input(self, message):
-        try:
-            data = {"data": message.data['Press']}
-            requests.post(domainServer, data = data)
+    #def handle_press_input(self, message):
+    #    try:
+    #        data = {"data": message.data['Press']}
+    #        requests.post(domainServer, data = data)
 
 
    # def sendRequest(url):
