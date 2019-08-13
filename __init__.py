@@ -26,8 +26,6 @@ class Screenremote(MycroftSkill):
     # nom ici
     def __init__(self):
         super().__init__("Screenremote")
-        self.language = str(self.settings.get("language"))
-        self.dict = init_dict(self.language)
 
     def init_dict(self, lang):
         if(lang == "fr"):
@@ -41,7 +39,7 @@ class Screenremote(MycroftSkill):
 
     @intent_file_handler('test.intent')
     def handle_test_intent(self, message):
-        self.speak_dialog(self.language)
+        self.speak_dialog('Confirm')
 
 
     # Définition de l'intent directionnel, concrètement
@@ -51,9 +49,10 @@ class Screenremote(MycroftSkill):
     def handle_direction_intent(self, message):
        try:
             key_input = message.data['direction']
+            language = str(self.settings.get("language"))
             
-            if(self.language != 'en-en'):
-                key_input= self.translate(key_input, self.dict)
+            if(language != 'en'):
+                key_input= self.__translate(key_input, language)
             key_input = "KEY_"+key_input.upper()
             response_code = self.sendRequest("remote", key_input)
             
@@ -104,10 +103,11 @@ class Screenremote(MycroftSkill):
         except Exception as e:
             self.speak_dialog('connection.error')
 
-    def __translate(word, lang):
-        for i in lang:
+    def __translate(self, word, lang):
+        my_dict = self.init_dict(lang)
+        for i in my_dict:
             if(i==word):
-                return lang[word]
+                return my_dict[word]
         return None
 
 
