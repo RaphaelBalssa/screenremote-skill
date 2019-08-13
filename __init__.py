@@ -26,14 +26,34 @@ class Screenremote(MycroftSkill):
     # nom ici
     def __init__(self):
         super().__init__("Screenremote")
+        self.language = str(self.settings.get("language"))
+        self.dict = init_dict(self.language)
+
+    def init_dict(self, lang):
+        if(lang == "fr"):
+            fr_dict = {"haut": "up", "bas": "bas",
+            "gauche": "left", "droite": "right",
+            "redémarre": "reboot", "menu": "menu"}
+            return fr_dict
+        else:
+             return None
+
+
+    @intent_file_handler('test.intent')
+    def handle_test_intent(self, message):
+        self.speak_dialog(self.language)
+
 
     # Définition de l'intent directionnel, concrètement
-    # permettre au curseur de monter quand on dit "monte"
-    # @intent_handler(IntentBuilder("keyRemoteIntent").optionally("Query").require('Go').require("Direction"))
+    # permettre au curseur de monter quand on dit "monte" ou autre
+    #@intent_handler(IntentBuilder("keyRemoteIntent").optionally("Query").require('Go').require("Direction"))
     @intent_file_handler('direction.press.intent')
-    def handle_key_remote_intent(self, message):
+    def handle_direction_intent(self, message):
        try:
-            key_input = message.data['up']
+            key_input = message.data['direction']
+            
+            if(self.language != 'en-en'):
+                key_input= self.translate(key_input, self.dict)
             key_input = "KEY_"+key_input.upper()
             response_code = self.sendRequest("remote", key_input)
             
@@ -41,20 +61,33 @@ class Screenremote(MycroftSkill):
 
        except Exception as e:
             self.speak_dialog('connection.error')
-            
+
+    @intent_file_handler('volume.up.intent')
+    def handle_volume_up_intent(self, message):
+        try:
+            response_code = self.sendRequest("order", "VOLUMEUP")
+            self.speak_dialog('Confirm')
+        
+        except Exception as e:
+            self.speak_dialog('connection.error')
+
+
+    @intent_file_handler('volume.down.intent')
+    def handle_volume_down_intent(self, message):
+        try:
+            response_code = self.sendRequest("order", "VOLUMEDOWN")
+            self.speak_dialog('Confirm')
+        
+        except Exception as e:
+            self.speak_dialog('connection.error')
+
+
     # @intent_file_handler('direction.press.intent')
     # def handle_direction_press_f(self, message):
     #     self.handle_direction_press(message)   
 
     # # Handle: direction pressed
     # def handle_direction_press(self, message):
-
-    #     try:
-    #         r = requests.post(domainServer, data = 'my_key_input')
-    #         self.speak_dialog('Confirm')
-
-    #     except Exception as e:
-    #         self.speak_dialog('connection.error')    
 
 
     # Définition de l'intent des boutons, concrètement
@@ -71,19 +104,12 @@ class Screenremote(MycroftSkill):
         except Exception as e:
             self.speak_dialog('connection.error')
 
-    # @intent_file_handler('button.press.intent')
-    # def handle_button_press_f(self, message):
-    #     self.handle_button_press(message)   
+    def __translate(word, lang):
+        for i in lang:
+            if(i==word):
+                return lang[word]
+        return None
 
-    # # Handle: button pressed
-    # def handle_button_press(self, message):
-
-    #     try:
-    #         r = requests.post(domainServer, data = 'my_key_input')
-    #         self.speak_dialog('Confirm')
-
-    #     except Exception as e:
-    #         self.speak_dialog('connection.error') 
 
     def sendRequest(self, typeR, value):
         IPaddress = str(self.settings.get("TerminalIPaddress"))
@@ -94,6 +120,7 @@ class Screenremote(MycroftSkill):
         r = requests.get(URL)
         return r.status_code
 
+    
 
 def create_skill():
     return Screenremote()
