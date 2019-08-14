@@ -29,7 +29,7 @@ class Screenremote(MycroftSkill):
 
     def init_dict(self, lang):
         if(lang == "fr"):
-            fr_dict = {"haut": "up", "bas": "bas",
+            fr_dict = {"haut": "up", "bas": "down",
             "gauche": "left", "droite": "right",
             "redémarre": "reboot", "menu": "menu"}
             return fr_dict
@@ -51,12 +51,12 @@ class Screenremote(MycroftSkill):
             key_input = message.data['direction']
             language = str(self.settings.get("language"))
             
-            if(language != 'en'):
+            if language != 'en':
                 key_input= self.__translate(key_input, language)
             key_input = "KEY_"+key_input.upper()
-            response_code = self.sendRequest("remote", key_input)
+            #response_code = self.sendRequest("remote", key_input)
             
-            self.speak_dialog('Confirm')
+            self.speak_dialog(key_input)
 
        except Exception as e:
             self.speak_dialog('connection.error')
@@ -64,7 +64,7 @@ class Screenremote(MycroftSkill):
     @intent_file_handler('volume.up.intent')
     def handle_volume_up_intent(self, message):
         try:
-            response_code = self.sendRequest("order", "VOLUMEUP")
+            response_code = self.sendRequest("remote", "VOLUMEUP")
             self.speak_dialog('Confirm')
         
         except Exception as e:
@@ -74,7 +74,25 @@ class Screenremote(MycroftSkill):
     @intent_file_handler('volume.down.intent')
     def handle_volume_down_intent(self, message):
         try:
-            response_code = self.sendRequest("order", "VOLUMEDOWN")
+            response_code = self.sendRequest("remote", "VOLUMEDOWN")
+            self.speak_dialog('Confirm')
+        
+        except Exception as e:
+            self.speak_dialog('connection.error')
+
+    @intent_file_handler('menu.intent')
+    def handle_menu_intent(self, message):
+        try:
+            response_code = self.sendRequest("remote", "MENU")
+            self.speak_dialog('Confirm')
+        
+        except Exception as e:
+            self.speak_dialog('connection.error')
+
+    @intent_file_handler('press.ok.intent')
+    def handle_press_ok_intent(self, message):
+        try:
+            response_code = self.sendRequest("remote", "ENTER")
             self.speak_dialog('Confirm')
         
         except Exception as e:
@@ -97,6 +115,10 @@ class Screenremote(MycroftSkill):
     def handle_order_remote_intent(self, message):
         try:
             key_input = message.data['reboot'].upper()
+            language = str(self.settings.get("language"))
+            
+            if language != 'en':
+                key_input= self.__translate(key_input, language)
             response_code = self.sendRequest("order", key_input)
             self.speak_dialog('Confirm')
         
